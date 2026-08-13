@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
 
 int main() {
 	int stopReading;
@@ -12,7 +11,7 @@ int main() {
 	printf("write at telegram,if you see the problems in this programm\nor have ideas to add new features.\n");
 	
 	printf("Enter your file name: "); //accepts a name of file from user
-	scanf("%99s", fileName);
+	scanf("%254s", fileName);
 
 	while ((stopReading = getchar()) != '\n' && stopReading != EOF); //removes the line break from the name
 
@@ -41,7 +40,7 @@ int main() {
 	if (totalLinesWritten == 1) {					   //show a number of written lines in file
 		printf("\n%d line was written to file.\n", totalLinesWritten);
 	} else {
-		printf("\n%d lines was written to file.\n", totalLinesWritten);
+		printf("\n%d lines were written to file.\n", totalLinesWritten);
 	}
 	
 	return 0;
