@@ -1,8 +1,10 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 int main() {
 	int stopReading;
-	char fileName[100];
+	char fileName[255];
+	char *pFileName[255];
 	// int i = 1;
 	// char lines[5] = "line";
 	
@@ -11,7 +13,8 @@ int main() {
 	printf("write at telegram,if you see the problems in this programm\nor have ideas to add new features.\n");
 	
 	printf("Enter your file name: "); //accepts a name of file from user
-	scanf("%99s", fileName);
+	scanf("%99s", *pFileName);
+	free(pFileName);
 
 	while ((stopReading = getchar()) != '\n' && stopReading != EOF); //removes the line break from the name
 
