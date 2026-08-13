@@ -7,7 +7,7 @@ int main() {
 	// char lines[5] = "line";
 	
 	printf("'DarkEditor v0.01'\n");
-	printf("this is a testing project.\nThis text editor is written by tg-@Dark30190 and Googe Gemini,\nwhile He's learning C.\n");
+	printf("this is a testing project.\nThis text editor is written by tg-@Dark30190 and Google Gemini,\nwhile He's learning C.\n");
 	printf("write at telegram,if you see the problems in this programm\nor have ideas to add new features.\n");
 	
 	printf("Enter your file name: "); //accepts a name of file from user
