@@ -17,7 +17,7 @@ int main() {
 
 	FILE *input = fopen(fileName, "a"); //set user's filename to tife.txt
 	if (input == NULL) {				//checks file being if file isn't created
-		printf("FIle opening error"); 
+		puts("FIle opening error"); 
 		return 1;
 	}
 
