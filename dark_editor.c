@@ -35,6 +35,7 @@ int main(int argc, char *argv[]) {
 	if (argc < 2) { //checking currect file name
 		fprintf(stderr, "Error: filename or command is not currect!\n");
 		fprintf(stderr, "Current name can be %s <file_name.txt>\n", argv[0]);
+		printf("Enter '--help' for more information.\n");
 		return 0;
 	}
 
