@@ -1,6 +1,6 @@
-//Dark Editor v0.03
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 void open_fullscreen() {
@@ -13,20 +13,44 @@ void close_fullscreen() {
 	fflush(stdout);
 }
 
+void cmd_version(char version[], char data[]) {
+	printf("Dark Editor %s from %s.\n", version, data);
+}
+
+void cmd_help() {
+	printf("command list:\n");
+	printf("-h, --help: show this manual;\n");
+	printf("-v, --version: show version.\n");
+}
+
 int main(int argc, char *argv[]) {
+	char progVersion[] = "v0.03_1";
+	char progReleaseDate[] = "16.08.2026"; 
 	int stopReading;
-	char *fileName = argv[1];
+	char *fileName = NULL;
 	int lineCount = 1;
 	char buffer[256];
 	int totalLinesWritten = 0;
 
-	open_fullscreen();
-
 	if (argc < 2) { //checking currect file name
-		fprintf(stderr, "Error: filename is not currect!\n");
+		fprintf(stderr, "Error: filename or command is not currect!\n");
 		fprintf(stderr, "Current name can be %s <file_name.txt>\n", argv[0]);
 		return 0;
 	}
+
+	for (int j = 1; j < argc; j++) {
+	        if (strcmp(argv[j], "-h") == 0 || strcmp(argv[j], "--help") == 0) {
+	            cmd_help();
+	            return 0;
+	        } else if (strcmp(argv[j], "-v") == 0 || strcmp(argv[j], "--version") == 0) {
+	        	cmd_version(progVersion, progReleaseDate);
+	        	return 0;
+	        }
+        }
+
+	fileName = argv[1];
+
+	open_fullscreen();
 	
 	FILE *input = fopen(fileName, "r"); //set user's filename to tife.txt
 
