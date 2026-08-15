@@ -1,30 +1,56 @@
+//Dark Editor v0.03
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
-int main() {
+void open_fullscreen() {
+	printf("\e[?1049h\e[H\e[2J");
+	fflush(stdout);
+}
+
+void close_fullscreen() {
+	printf("\e[?1049l");
+	fflush(stdout);
+}
+
+int main(int argc, char *argv[]) {
 	int stopReading;
-	char fileName[255];
+	char *fileName = argv[1];
 	int lineCount = 1;
+	char buffer[256];
 	int totalLinesWritten = 0;
-	
-	printf("'DarkEditor v0.02'\n"); //descroption
-	printf("this is a testing project.\nThis text editor is written by tg-@Dark30190 and Google Gemini,\nwhile He's learning C.\n");
-	printf("write at telegram,if you see the problems in this programm\nor have ideas to add new features.\n");
-	
-	printf("Enter your file name: "); //accepts a name of file from user
-	scanf("%254s", fileName);
 
-	while ((stopReading = getchar()) != '\n' && stopReading != EOF); //removes the line break from the name
+	open_fullscreen();
 
-	FILE *input = fopen(fileName, "a"); //set user's filename to tife.txt
+	if (argc < 2) { //checking currect file name
+		fprintf(stderr, "Error: filename is not currect!\n");
+		fprintf(stderr, "Current name can be %s <file_name.txt>\n", argv[0]);
+		return 0;
+	}
+	
+	FILE *input = fopen(fileName, "r"); //set user's filename to tife.txt
+
 	if (input == NULL) {				//checks file being if file isn't created
-		puts("FIle opening error"); 
+		fprintf(stderr, "FIle opening error"); 
 		return 1;
 	}
+	
+	printf("=|Dark Editor v0.03|=====| filename: %s|=====|commands: Ctrl+D - save file and exit|==========\n", fileName);
 
-	printf("click Ctrl+D on Linux/macOS or Ctrl+Z on Windows to end tiping.\n");
+	//printf("%d. ", lineCount); //print a number of first line
 
-	printf("%d. ", lineCount); //print a number of first line
+	while (fgets(buffer, sizeof(buffer), input) != NULL) {
+		printf("%d. ", lineCount);
+		lineCount++;
+		printf("%s", buffer);
+	}
 
+	printf("%d. ", lineCount);
+	
+	fclose(input);
+	
+	input = fopen(fileName, "a");
+	
 	while ((stopReading = getchar()) != EOF) { //writes user's tiping to file
 		fputc(stopReading, input);
 
@@ -42,6 +68,14 @@ int main() {
 	} else {
 		printf("\n%d lines were written to file.\n", totalLinesWritten);
 	}
+
+	for (int i = 1; i > 0; i--) {
+		//printf("\rTime ramaining: %d s...", i);
+		fflush(stdout);
+		sleep(1);
+	}
+
+	close_fullscreen();
 	
 	return 0;
 }
