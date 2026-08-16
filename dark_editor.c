@@ -61,9 +61,7 @@ int main(int argc, char *argv[]) {
 	
 	open_fullscreen();
 	
-	printf("=|Dark Editor v0.03|=====| filename: %s|=====|commands: Ctrl+D - save file and exit|==========\n", fileName);
-
-	//printf("%d. ", lineCount); //print a number of first line
+	printf("=|Dark Editor %s|=====| filename: %s|=====|commands: Ctrl+D - save file and exit|==========\n", progVersion, fileName);
 
 	while (fgets(buffer, sizeof(buffer), input) != NULL) {
 		printf("%d. ", lineCount);
