@@ -24,7 +24,7 @@ void cmd_help() {
 }
 
 int main(int argc, char *argv[]) {
-	char progVersion[] = "v0.03_1";
+	char progVersion[] = "v0.03_2";
 	char progReleaseDate[] = "16.08.2026"; 
 	int stopReading;
 	char *fileName = NULL;
@@ -50,15 +50,16 @@ int main(int argc, char *argv[]) {
         }
 
 	fileName = argv[1];
-
-	open_fullscreen();
 	
 	FILE *input = fopen(fileName, "r"); //set user's filename to tife.txt
 
 	if (input == NULL) {				//checks file being if file isn't created
-		fprintf(stderr, "FIle opening error"); 
-		return 1;
+		//fprintf(stderr, "FIle opening error");
+		input = fopen(fileName, "a");
+		fclose(input); 
 	}
+	
+	open_fullscreen();
 	
 	printf("=|Dark Editor v0.03|=====| filename: %s|=====|commands: Ctrl+D - save file and exit|==========\n", fileName);
 
@@ -95,7 +96,6 @@ int main(int argc, char *argv[]) {
 	}
 
 	for (int i = 1; i > 0; i--) {
-		//printf("\rTime ramaining: %d s...", i);
 		fflush(stdout);
 		sleep(1);
 	}
