@@ -3,28 +3,14 @@
 #include <string.h>
 #include <unistd.h>
 
-void open_fullscreen() {
-	printf("\e[?1049h\e[H\e[2J");
-	fflush(stdout);
-}
-
-void close_fullscreen() {
-	printf("\e[?1049l");
-	fflush(stdout);
-}
-
-void cmd_version(char version[], char data[]) {
-	printf("Dark Editor %s from %s.\n", version, data);
-}
-
-void cmd_help() {
-	printf("command list:\n");
-	printf("-h, --help: show this manual;\n");
-	printf("-v, --version: show version.\n");
-}
+//function prototypes
+void open_fullscreen(); //opens program in alternate screen buffer 
+void close_fullscreen();//closes alternate screen buffer
+void cmd_version(char version[], char data[]); //'--help' command func
+void cmd_help();							   //'--version' command func
 
 int main(int argc, char *argv[]) {
-	char progVersion[] = "v0.03_2";
+	char progVersion[] = "v0.03_3";
 	char progReleaseDate[] = "16.08.2026"; 
 	int stopReading;
 	char *fileName = NULL;
@@ -32,14 +18,14 @@ int main(int argc, char *argv[]) {
 	char buffer[256];
 	int totalLinesWritten = 0;
 
-	if (argc < 2) { //checking currect file name
+	if (argc < 2) { 														//checking a currecting of file name and commands
 		fprintf(stderr, "Error: filename or command is not currect!\n");
 		fprintf(stderr, "Current name can be %s <file_name.txt>\n", argv[0]);
 		printf("Enter '--help' for more information.\n");
-		return 0;
+		return 1;
 	}
 
-	for (int j = 1; j < argc; j++) {
+	for (int j = 1; j < argc; j++) { 												//flags checking
 	        if (strcmp(argv[j], "-h") == 0 || strcmp(argv[j], "--help") == 0) {
 	            cmd_help();
 	            return 0;
@@ -49,43 +35,46 @@ int main(int argc, char *argv[]) {
 	        }
         }
 
-	fileName = argv[1];
+	fileName = argv[1]; //takes and assigns a name to a file if argumment is a filename
 	
-	FILE *input = fopen(fileName, "r"); //set user's filename to tife.txt
-
-	if (input == NULL) {				//checks file being if file isn't created
-		//fprintf(stderr, "FIle opening error");
-		input = fopen(fileName, "a");
-		fclose(input); 
+	FILE *file = fopen(fileName, "r+"); //opens a file if it's
+	if (file == NULL) {				//checks file being and creates that if a file's not found
+		file = fopen(fileName, "w+");
+		if (file == NULL) {
+			fprintf(stderr, "Error: Cannot ope or create file");
+			return 1;
+		}
 	}
 	
-	open_fullscreen();
-	
-	printf("=|Dark Editor %s|=====| filename: %s|=====|commands: Ctrl+D - save file and exit|==========\n", progVersion, fileName);
+	open_fullscreen(); //opens alternate screen buffer if main func argument is a filename
+	//print a program's name, version and keybinding in fullscreen
+	printf("=|Dark Editor %s|=====| filename: %s|=====|commands: Ctrl+D - save file and exit|==========\n", progVersion, fileName); 
 
-	while (fgets(buffer, sizeof(buffer), input) != NULL) {
+	while (fgets(buffer, sizeof(buffer), file) != NULL) { //prints a file content with line numbers adding 
 		printf("%d. ", lineCount);
-		lineCount++;
 		printf("%s", buffer);
-	}
-
-	printf("%d. ", lineCount);
-	
-	fclose(input);
-	
-	input = fopen(fileName, "a");
-	
-	while ((stopReading = getchar()) != EOF) { //writes user's tiping to file
-		fputc(stopReading, input);
-
-		if (stopReading == '\n') { //adds a line number during tiping(right now it doesn't work currently)
+		if (buffer[strlen(buffer) - 1] == '\n') {
 			lineCount++;
-			totalLinesWritten++;
-			printf("%d. ", lineCount);
 		}
 	}
 
-	fclose(input);
+	printf("%d. ", lineCount);
+	fflush(stdout);
+
+	fseek(file, 0, SEEK_END); 
+	
+	while ((stopReading = getchar()) != EOF) { //writes user's tiping to file
+		fputc(stopReading, file);
+
+		if (stopReading == '\n') { //adds a line number during tiping
+			lineCount++;
+			totalLinesWritten++;
+			printf("%d. ", lineCount);
+			fflush(stdout);
+		}
+	}
+
+	fclose(file);
 	
 	if (totalLinesWritten == 1) {					   //show a number of written lines in file
 		printf("\n%d line was written to file.\n", totalLinesWritten);
@@ -93,7 +82,7 @@ int main(int argc, char *argv[]) {
 		printf("\n%d lines were written to file.\n", totalLinesWritten);
 	}
 
-	for (int i = 1; i > 0; i--) {
+	for (int i = 1; i > 0; i--) { //timer to close alternate screen buffer
 		fflush(stdout);
 		sleep(1);
 	}
@@ -101,4 +90,24 @@ int main(int argc, char *argv[]) {
 	close_fullscreen();
 	
 	return 0;
+}
+
+void open_fullscreen() { //uses alternate screen buffer
+	printf("\e[?1049h\e[H\e[2J");
+	fflush(stdout);
+}
+
+void close_fullscreen() { //exit to command shell
+	printf("\e[?1049l");
+	fflush(stdout);
+}
+
+void cmd_version(char version[], char data[]) {		//using '--version or -v' argument shows porgram version 
+	printf("Dark Editor %s from %s.\n", version, data);
+}
+
+void cmd_help() {									//using '--help or =v' argument shows program help manual
+	printf("command list:\n");
+	printf("-h, --help: show this manual;\n");
+	printf("-v, --version: show version.\n");
 }
