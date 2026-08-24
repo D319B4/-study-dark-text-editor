@@ -3,6 +3,12 @@
 #include <string.h>
 #include <unistd.h>
 
+//cursor struction(will be used in the future)
+typedef struct {
+	int pos_x;
+	int pos_y;
+} Cursor;
+
 //function prototypes
 void open_fullscreen(); //opens program in alternate screen buffer 
 void close_fullscreen();//closes alternate screen buffer
